@@ -131,10 +131,11 @@ async def run_workflow_with_cache(
         "transactions": {},
         "claims": {},
         "notes": {},
-        "action": {}
+        "actions": {}
     }
 
     health_check = await cache_client.health_check()
+    print(health_check)
 
     if health_check.get("redis_connected") == "connected" and health_check.get("status") == "healthy":
         # Store empty cache object
@@ -149,9 +150,12 @@ async def run_workflow_with_cache(
     return final_status
 
 
-if __name__ == "__main__":
+async def main():
+    # Base URL points to hosted cache server API on Azure
+    base_url = "https://app-cache-poc.azurewebsites.net"
+
     manager = WorkflowManager(bearer_token=os.getenv("BEARER_TOKEN"))
-    cache_client = CacheAPIClient()
+    cache_client = CacheAPIClient(base_url=base_url)
 
     workflow_payload = {
         "agent_id": "bae08bc3-6160-4838-bcd4-510fea5542cc",
@@ -162,4 +166,8 @@ if __name__ == "__main__":
         }
     }
 
-    asyncio.run(run_workflow_with_cache(cache_client, manager, workflow_payload))
+    print(await run_workflow_with_cache(cache_client, manager, workflow_payload))
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

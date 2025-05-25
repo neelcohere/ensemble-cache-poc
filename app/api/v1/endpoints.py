@@ -5,9 +5,9 @@ from datetime import datetime, UTC
 
 from fastapi import FastAPI, HTTPException, APIRouter
 
-from core.cache import get_redis_connection
-from models.item import CacheItem
-from models.response import CacheResponse
+from app.core.cache import get_redis_connection
+from app.models.item import CacheItem
+from app.models.response import CacheResponse
 
 # FastAPI app
 app = FastAPI(

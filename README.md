@@ -13,12 +13,15 @@ This project demonstrates a caching system that combines multiple caching strate
 - Asynchronous request handling
 - Environment-based configuration
 - Modular architecture
+- Azure Container Registry (ACR) deployment support
 
 ## Prerequisites
 
 - Python 3.10 or higher
 - Redis server
 - uv (Python package installer and resolver)
+- Azure CLI (for ACR deployment)
+- Docker
 
 ## Installation
 
@@ -66,12 +69,43 @@ Then edit the `.env` file with your specific configuration values.
 
 ## Running the Application
 
+### Local Development
+
 Start the FastAPI server:
 ```bash
 uvicorn app.main:app --reload
 ```
 
 The API will be available at `http://localhost:8000`
+
+### Azure Container Registry Deployment
+
+This branch is specifically configured for hosting the application on Azure Container Registry (ACR) and Azure App Service.
+
+1. Login to Azure:
+```bash
+az login
+```
+
+2. Login to Azure Container Registry:
+```bash
+az acr login --name acrcachepoc
+```
+
+3. Build and push the Docker image:
+```bash
+docker buildx build --platform linux/amd64 -t acrcachepoc.azurecr.io/cache-poc:latest --push .
+```
+
+4. The application will be available at:
+```
+https://app-cache-poc.azurewebsites.net/
+```
+
+Available endpoints:
+- API Documentation: `/docs` or `/redoc`
+- Health Check: `/api/v1/health`
+- Cache API: `/api/v1/cache`
 
 ## Project Structure
 
